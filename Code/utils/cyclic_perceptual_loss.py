@@ -152,6 +152,7 @@ class CombinedLoss(nn.Module):
         return (self.alpha * mse) + (self.beta * ssim) + (self.gamma * p_loss)
 
 
+# Scheduling Epochs for Plane Transitions (Algorithm 2 in the paper)
 def calculate_cycle_epochs(max_epochs, cycle_duration, cycle_factor):
     """
     Calculate the epoch lists where plane selection changes based on the given
@@ -180,7 +181,7 @@ def calculate_cycle_epochs(max_epochs, cycle_duration, cycle_factor):
         if cnt + 2 * current_cycle < max_epochs:
             sa_epochs.append(cnt + 2 * current_cycle)
         cnt += 3 * current_cycle
-        current_cycle = math.floor(current_cycle * cycle_factor)
+        current_cycle = max(1, round(current_cycle * cycle_factor))
 
     return ax_epochs, co_epochs, sa_epochs
 
